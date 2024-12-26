@@ -128,7 +128,7 @@ def main(runtime_hours):
     loop_time = time.time()
     while time.time() - start_time < runtime_seconds:
        
-        takeMesurement()
+        takeMeasurementPrint()
         
         time.sleep(loop_time + 600 - time.time())  # wait till next 10 minute period
 
