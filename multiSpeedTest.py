@@ -99,18 +99,19 @@ def takeMeasurementPrint():
     print(recv)
     # append recv to csvSpt
     append_to_csv(csvSpt, recv)
+    p4.kill()
 
     # fast
     recv = ""
     p5 = process(["fast", "-u", "--json"])
     recv = remove_non_ansi(wholeRecv(p5, recv))
-    # print(recv)
+    print(recv)
     recvJson = json.loads(recv)
     values = recvJson.values()
     csv_string = ','.join(map(str, values))
     # append recv to csvFast
     append_to_csv(csvFast, csv_string)
-
+    p5.kill()
 
 def main(runtime_hours):
 
@@ -125,12 +126,16 @@ def main(runtime_hours):
     print(f"Speedtest will run for {runtime_hours} hour(s) ({runtime_seconds} seconds).")
     
     start_time = time.time()
-    loop_time = time.time()
     while time.time() - start_time < runtime_seconds:
-       
+        sleep_time = time.time() + 600
         takeMeasurementPrint()
+        try:
+            print("reading at: "+ str(time.time()))
+            # print(sleep_time, time.time(), sleep_time - time.time())
+            time.sleep(sleep_time - time.time())  # wait till next 10 minute period
+        except Exception as e:
+            print(e)
         
-        time.sleep(loop_time + 600 - time.time())  # wait till next 10 minute period
 
     print("Runtime completed.")
     # takeMeasurementPrint()
